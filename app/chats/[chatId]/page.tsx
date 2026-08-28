@@ -1,7 +1,3 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { useState } from "react";
 import { BsCheckAll } from "react-icons/bs";
 import { FaMicrophone, FaPaperclip } from "react-icons/fa6";
 import { HiDotsVertical } from "react-icons/hi";
@@ -20,28 +16,19 @@ const chats = [
 
 type Message = { id: number; side: "incoming" | "outgoing"; text: string; time: string };
 
-const initialMessages: Message[] = [
+const messages: Message[] = [
   { id: 1, side: "incoming", text: "Salam Pesar", time: "11:10" },
   { id: 2, side: "outgoing", text: "Salam! Chetori?", time: "11:12" },
   { id: 3, side: "incoming", text: "Khoobam Merci! To chetor?", time: "11:15" },
 ];
 
-export default function TelegramConversation() {
-  const { chatId } = useParams<{ chatId: string }>();
+export default async function TelegramConversation({
+  params,
+}: {
+  params: Promise<{ chatId: string }>;
+}) {
+  const { chatId } = await params;
   const selectedChat = chats.find((chat) => chat.id === Number(chatId)) ?? chats[2];
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState(initialMessages);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  function sendMessage() {
-    const text = input.trim();
-    if (!text) return;
-    setMessages((current) => [
-      ...current,
-      { id: current.length + 1, side: "outgoing", text, time: "11:16" },
-    ]);
-    setInput("");
-  }
 
   return (
     <div className="grid h-screen min-h-[480px] grid-cols-1 overflow-hidden bg-[#0e0e0f] text-white md:grid-cols-[320px_minmax(0,1fr)]">
@@ -89,15 +76,7 @@ export default function TelegramConversation() {
           <div className="flex items-center gap-1 text-white/55">
             <button aria-label="Search conversation" className="rounded-full p-2 hover:bg-white/5"><MdSearch size={21} /></button>
             <button aria-label="Start call" className="rounded-full p-2 hover:bg-white/5"><IoCall size={19} /></button>
-            <div className="relative">
-              <button aria-label="Conversation menu" className="rounded-full p-2 hover:bg-white/5" onClick={() => setMenuOpen((open) => !open)}><HiDotsVertical size={19} /></button>
-              {menuOpen ? (
-                <div className="absolute right-0 top-10 z-10 w-40 rounded-lg bg-[#292929] p-1 text-sm shadow-xl">
-                  <button className="w-full rounded px-3 py-2 text-left hover:bg-white/5">View profile</button>
-                  <button className="w-full rounded px-3 py-2 text-left hover:bg-white/5">Mute</button>
-                </div>
-              ) : null}
-            </div>
+            <button aria-label="Conversation menu" className="rounded-full p-2 hover:bg-white/5"><HiDotsVertical size={19} /></button>
           </div>
         </header>
 
@@ -122,9 +101,9 @@ export default function TelegramConversation() {
           <div className="mx-auto flex max-w-3xl items-center gap-2">
             <button aria-label="Attach file" className="rounded-full p-2 text-white/50 hover:bg-white/5"><FaPaperclip size={19} /></button>
             <div className="flex min-w-0 flex-1 items-center rounded-full bg-[#252525] px-4">
-              <input aria-label="Message" className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-white/35" onChange={(event) => setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") sendMessage(); }} placeholder="Message" value={input} />
+              <input aria-label="Message" className="h-11 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-white/35" placeholder="Message" readOnly />
             </div>
-            <button aria-label="Send voice message" className="rounded-full bg-[#5a8dee] p-3 text-white" onClick={sendMessage}><FaMicrophone size={18} /></button>
+            <button aria-label="Send voice message" className="rounded-full bg-[#5a8dee] p-3 text-white"><FaMicrophone size={18} /></button>
           </div>
         </footer>
       </main>
