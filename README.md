@@ -2,6 +2,10 @@
 
 A modern Telegram web application clone built with Next.js, TypeScript, and Zustand for state management. This project replicates the core functionality and user interface of Telegram with responsive design and real-time chat simulation.
 
+## Averlo Stage branch
+
+`averlo-stage-v1` preserves the upstream MIT history while providing a deterministic, network-independent Telegram conversation at `/chats/2`. The route uses checked-in fixtures and assets, with no authentication gate, timers, random events, persistence dependency, or runtime media downloads.
+
 ## 🚀 Features
 
 ### Core Chat Features
